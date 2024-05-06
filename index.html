@@ -162,6 +162,7 @@
 <body>
     <form id="pdfForm">
         <div class="form-group">
+            Recieved By: <input type="text" name="recvBy" id="recvBy" maxlength="30">
             Data: <input type="date" name="date" id="date" maxlength="10">
             Hour: <input type="text" name="hour" id="hour" maxlength="10">
         </div>
@@ -326,7 +327,7 @@
         document.getElementById('pdfForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting via the browser
             var previewDiv = document.getElementById('preview'); 
-
+            var recvBy = document.getElementById('recvBy').value;
             var date = document.getElementById('date').value; 
             var hour = document.getElementById('hour').value; ; 
             var pickupInfo = document.getElementById('pickupInfo').value; ; 
@@ -510,7 +511,7 @@
                                 <img style="position: relative;right: 200px;" src="images/xpdLogo.png" alt="XPD Logo">
                             </div>
                             <div  class="reciv full-width">
-                                <p> Received By: </p>
+                                <p> Received By:<br><strong>${recvBy}</strong> </p>
                             </div>
                             <div class=" full-width"><strong style="font-size: 20px; position: relative;left: 150px;bottom: 13px;">PICKUP ORDER</strong></div>
                             <div class="full-width">
