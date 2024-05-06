@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickup Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            padding: 20px;
+        }
+
+        form {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Use full width of the container */
+            max-width: 1200px; /* Maximum width */
+            margin: 0 auto; /* Centering the form */
+            
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="date"] {
+            width: calc(50% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #0460FA;
+            border-radius: 5px;
+            box-sizing: border-box;
+            max-width: 300px; /* Limiting form width for better aesthetics */          
+            margin: auto; /* Centering the form on the page */
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus {
+            border-color: #0340c2;
+        }
+
+        button {
+            background-color: #0460FA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0340c2;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+        }
+
+        #tableRows, #tableRowsT2{
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4; /* Light grey background for visibility */
+            border-radius: 8px;
+        }
+
+        .tableRow {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* Divide the row into 5 equal columns */
+            gap: 10px; /* Space between grid items */
+            align-items: end;
+            margin-bottom: 15px; /* Space between each row */
+        }
+
+        .tableRow label {
+            width: 100%;
+            font-size: 0.8em;
+            color: #666;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        .tableRow input, .tableRow button {
+            width: 100%; /* Full width of grid column */
+            padding: 8px;
+            border: 1px solid #0460FA;
+            border-radius: 4px;
+        }
+
+        .remove-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .remove-button:hover {
+            background-color: #ff2121;
+        }
+
+        button[type="submit"], button[type="button"] {
+            width: auto;
+            padding: 10px 20px;
+            margin-top: 20px; /* Additional spacing from the last row */
+            grid-column: span 5; /* Span across all columns for full width */
+        }
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 3fr; /* Allocation of space between label and field */
+            gap: 10px; /* Space between label and field */
+            margin-bottom: 15px; /* Space between each form group */
+        }    
+        
+        img {
+            margin-left: 150px;
+            float: right;
+            max-width: 150px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+        }
+        .box {
+            width: 350px;
+        }
+        .address {
+            float: right;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            word-wrap: break-word;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        td, tr {
+            overflow: hidden;
+            width: fixed;
+            vertical-align: top;
+            overflow: hidden; /* Hides any content that overflows the cell's box */
+            text-overflow: ellipsis; /* Render ellipses (...) to represent clipped text */
+            white-space: nowrap; /* Prevents text from wrapping */
+            max-width: 20%; /* Sets a maximum width for each cell */
+        }
+        .wrap-text {
+            white-space: normal; /* Allows text to wrap */
+            word-wrap: break-word; /* Ensures words are broken properly */
+            
+        }
+        
+    </style>
+</head>
+<body>
+    <form id="pdfForm">
+        <div class="form-group">
+            Data: <input type="date" name="date" id="date" maxlength="10">
+            Hour: <input type="text" name="hour" id="hour" maxlength="10">
+        </div>
+        <br><br>
+        <div class="form-group">
+            Pickup Information: <input type="text" name="pickupInfo" id="pickupInfo" maxlength="10">
+            Pickup Address: <input type="text" name="pickupAddress" id="pickupAddress" maxlength="25">
+            Pickup Date: <input type="date" name="pickupDate" id="pickupDate" maxlength="10">
+            Pickup Hour : <input type="text" name="pickupHour" id="pickupHour" maxlength="10">
+        </div>
+        <br><br>
+        <div class="form-group">
+            Delivery Information: <input type="text" name="deliveryInfo" id="deliveryInfo" maxlength="10">
+            Delivery Address: <input type="text" name="deliveryAddress" id="deliveryAddress" maxlength="25">
+            Delivery Date: <input type="date" name="deliveryDate" id="deliveryDate" maxlength="10">
+            Delivery Hour : <input type="text" name="deliveryHour" id="deliveryHour" maxlength="10">
+        </div>
+        <br><br>
+        <div class="form-group">
+            Carrier: <input type="text" name="carier" id="carier">
+            PRO Number: <input type="text" name="PROnum" id="PROnum">
+            Traking Number: <input type="text" name="trakNum" id="trakNum">
+            Supplier: <input type="text" name="supplier" id="supplier">
+        </div>
+        <br><br>
+        <div class="form-group">
+            Shipper:<input type="text" name="shipper" id="shipper">
+            Driver:<input type="text" name="driver" id="driver">
+            Driver License:<input type="text" name="driverLic" id="driverLic">
+        </div>
+        <div class="form-group">
+            Consignee:<input type="text" name="consignee" id="consignee">
+            Invoice Number:<input type="text" name="invNum" id="invNum">
+            PO Number:<input type="text" name="POnum" id="POnum">
+            Charges:<input type="text" name="charges" id="charges">
+        </div>
+        <br><br>
+        
+        <div id="tableRows1">
+            <div class="tableRow">
+                <div>
+                    <label for="marks_and_numbers[]">Marks and Numbers:</label>
+                    <input type="text" name="marks_and_numbers[]" class="marks_and_numbers">
+                </div>
+                <div>
+                    <label for="pieces[]">Number of Packages:</label>
+                    <input type="number" name="pieces[]" class="pieces">
+                </div>
+                <div>
+                    <label for="description[]">Description of Commodities:</label>
+                    <input type="text" name="description[]" class="description">
+                </div>
+                <div>
+                    <label for="weight[]">Gross Weight:</label>
+                    <input type="number" name="weight[]" class="weight">
+                </div>
+                <div>
+                    <label for="vol_weight[]">Vol Weight:</label>
+                    <input type="number" name="vol_weight[]" class="vol_weight">
+                </div>
+                <button class="remove-button" type="button" onclick="removeRow(this)">Remove</button>
+            </div>
+        </div>
+        <button type="button" onclick="addRow1()">Add Row</button><br><br>
+
+        <div id="tableRows2">
+            <div class="tableRow">
+                <div>
+                    <label for="partNo[]">Part No.:</label>
+                    <input type="text" name="partNo[]" class="partNo">
+                </div>
+                <div>
+                    <label for="lotNo[]">Lot No.:</label>
+                    <input type="number" name="lotNo[]" class="lotNo">
+                </div>
+                <div>
+                    <label for="serialNo[]">Serial Numbers:</label>
+                    <input type="number" name="serialNo[]" class="serialNo">
+                </div>
+                <div>
+                    <label for="expDate[]">Expiration Date:</label>
+                    <input type="date" name="expDate[]" class="expDate">
+                </div>
+                
+                <button class="remove-button" type="button" onclick="removeRow(this)">Remove</button>
+            </div>
+        </div>
+        <button type="button" onclick="addRow2()">Add Row</button><br><br>
+        <button type="submit">Generate Preview</button>
+    </form>
+<br><br><br>
+<div id="preview"></div>
+    <script>
+       function addRow1() {
+            var container1 = document.getElementById('tableRows1');
+            var row1 = document.createElement('div');
+            row1.className = 'tableRow';
+            row1.innerHTML = `
+            
+                    <div>
+                        <label for="marks_and_numbers[]">Marks and Numbers:</label>
+                        <input type="text" name="marks_and_numbers[]" class="marks_and_numbers">
+                    </div>
+                    <div>
+                        <label for="pieces[]">Number of Packages:</label>
+                        <input type="number" name="pieces[]" class="pieces">
+                    </div>
+                    <div>
+                        <label for="description[]">Description of Commodities:</label>
+                        <input type="text" name="description[]" class="description">
+                    </div>
+                    <div>
+                        <label for="weight[]">Gross Weight:</label>
+                        <input type="number" name="weight[]" class="weight">
+                    </div>
+                    <div>
+                        <label for="vol_weight[]">Vol Weight:</label>
+                        <input type="number" name="vol_weight[]" class="vol_weight">
+                    </div>
+                    <button class="remove-button" type="button" onclick="removeRow(this)">Remove</button>
+                
+            `;
+            container1.appendChild(row1);
+        }
+
+        function addRow2() {
+            var container2 = document.getElementById('tableRows2');
+            var row2 = document.createElement('div');
+            row2.className = 'tableRow';
+            row2.innerHTML = `
+            
+                    <div>
+                        <label for="partNo[]">Part No.:</label>
+                        <input type="text" name="partNo[]" class="partNo">
+                    </div>
+                    <div>
+                        <label for="lotNo[]">Lot No.:</label>
+                        <input type="number" name="lotNo[]" class="lotNo">
+                    </div>
+                    <div>
+                        <label for="serialNo[]">Serial Numbers:</label>
+                        <input type="text" name="serialNo[]" class="serialNo">
+                    </div>
+                    <div>
+                        <label for="expDate[]">Expiration Date:</label>
+                        <input type="date" name="expDate[]" class="expDate">
+                    </div>
+                    
+                    <button class="remove-button" type="button" onclick="removeRow(this)">Remove</button>
+                
+            `;
+            container2.appendChild(row2);
+        }
+
+        function removeRow(button) {
+            var row = button.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+
+        
+        document.getElementById('pdfForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting via the browser
+            var previewDiv = document.getElementById('preview'); 
+
+            var date = document.getElementById('date').value; 
+            var hour = document.getElementById('hour').value; ; 
+            var pickupInfo = document.getElementById('pickupInfo').value; ; 
+            var pickupAddress = document.getElementById('pickupAddress').value; ; 
+            var pickupDate = document.getElementById('pickupDate').value; ;
+            var pickupHour = document.getElementById('pickupHour').value; ;
+            var deliveryInfo = document.getElementById('deliveryInfo').value; ; 
+            var deliveryAddress = document.getElementById('deliveryAddress').value; ; 
+            var deliveryDate = document.getElementById('deliveryDate').value; ;
+            var deliveryHour = document.getElementById('deliveryHour').value; ;
+            var carier = document.getElementById('carier').value; ; 
+            var PROnum = document.getElementById('PROnum').value; ; 
+            var trakNum = document.getElementById('trakNum').value; ; 
+            var supplier = document.getElementById('supplier').value; ; 
+            var shipper = document.getElementById('shipper').value; ; 
+            var driver = document.getElementById('driver').value; ; 
+            var driverLic = document.getElementById('driverLic').value; ; 
+            var consignee = document.getElementById('consignee').value; ; 
+            var invNum = document.getElementById('invNum').value; ; 
+            var POnum = document.getElementById('POnum').value; ; 
+            var charges = document.getElementById('charges').value; ; 
+
+            
+            var rows1 = document.querySelectorAll('#tableRows1 .tableRow');
+            var table1 = '<table style ="border: 2px solid black;text-align: left;"><tr><th style = "background-color: #f0f0f0;">Marks and Numbers</th><th style = "background-color: #f0f0f0;">Number of Packages</th><th style = "background-color: #f0f0f0;">Description of <br> Commodities</th><th style = "background-color: #f0f0f0;">Gross Weight</th><th style = "background-color: #f0f0f0;">Vol Wgt</th></tr>';
+                
+                
+                var totalSumWeight = 0;
+                var totalSumVolume = 0;
+                var totalPieces = 0;
+                var totalWeight = 0;
+                
+            Array.from(rows1).forEach(function(row1) {
+                var marks = row1.querySelector('.marks_and_numbers').value;
+                var pieces = parseFloat(row1.querySelector('.pieces').value) || 0;
+                var description = row1.querySelector('.description').value;
+                var weight = parseFloat(row1.querySelector('.weight').value) || 0;
+                var volWeight = parseFloat(row1.querySelector('.vol_weight').value) || 0;
+                
+                totalPieces += pieces;
+                totalSumWeight += weight;
+                totalSumVolume += volWeight;
+                totalWeight = totalSumWeight*totalPieces
+                totalVolume = totalSumVolume*totalPieces
+                
+                table1 += `<tr>
+                    <td class="wrap-text" style ="border: 1px solid black;">${marks}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${pieces}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${description}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${weight}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${volWeight}</td>
+                </tr>`;
+            });
+
+            table1 += '</table>';
+
+            var rows2 = document.querySelectorAll('#tableRows2 .tableRow');
+            var table2 = '<table style ="border: 2px solid black;text-align: left;"><tr><th style = "background-color: #f0f0f0;">Part No.</th><th style = "background-color: #f0f0f0;">Lot No.</th><th style = "background-color: #f0f0f0;">Serial Numbers</th><th style = "background-color: #f0f0f0;">Expiration Date</th></tr>';
+                
+                
+                
+            Array.from(rows2).forEach(function(row2) {
+                var partNo = row2.querySelector('.partNo').value;
+                var lotNo = row2.querySelector('.lotNo').value;
+                var serialNo =row2.querySelector('.serialNo').value;
+                var expDate = row2.querySelector('.expDate').value;
+             
+                
+                table2 += `<tr>
+                    <td class="wrap-text" style ="border: 1px solid black;">${partNo}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${lotNo}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${serialNo}</td>
+                    <td class="wrap-text" style ="border: 1px solid black;">${expDate}</td>
+                </tr>`;
+            });
+
+
+            
+            table2 += '</table>';
+
+            previewDiv.innerHTML = `
+            <!DOCTYPE html>
+<html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+               
+                <style>
+                    table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    word-wrap: break-word;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                    }
+                    td, tr {
+                        overflow: hidden;
+                        width: fixed;
+                        vertical-align: top;
+                        overflow: hidden; /* Hides any content that overflows the cell's box */
+                        text-overflow: ellipsis; /* Render ellipses (...) to represent clipped text */
+                        white-space: nowrap; /* Prevents text from wrapping */
+                        max-width: 150px; /* Sets a maximum width for each cell */
+                    }
+                    .wrap-text {
+                        white-space: normal; /* Allows text to wrap */
+                        word-wrap: break-word; /* Ensures words are broken properly */
+                    }
+                    img{
+                        max-width: 200px;
+                    }
+                    .full-width {
+                        width: 100% !important;
+
+                    }
+                    /* Top section with three horizontal divs */
+                    .top {
+                        display: flex;
+                        font-size: 12px;
+                    }
+                    .top > div {
+                        flex: 1; /* Divide space equally among the divs */
+                    }
+                    .reciv {
+                        position: relative;
+                        top: 160px;
+                        right: 55px;
+                    }
+                    .middle, .middle2, .bottom {
+                        margin-top: 10px;
+                        display: flex;
+                    }
+                    .center{
+                        position: relative;
+                        left: 300px;
+                    }
+                    .container {
+                        display: flex;
+                        justify-content: center; /* centers horizontally */
+                        align-items: center; /* centers vertically if you want full centering */
+                        
+                    }
+                    .PDFborder{
+                        border: 2px solid black;
+                        width: 900px;
+                        height: auto;
+                        padding: 20px;
+                        font-family: sans-serif;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    .totals{
+                        background-color: #d6d4d4;
+                        display: flex;
+                        flex-direction: row;
+                        padding: 8px;
+                    }
+                    .totalNums{
+                        position: relative;
+                        left: 42px;
+                        min-width: 100px;
+                    }
+                    .footer{
+                        vertical-align: top;
+                        display: inline-block;
+                        font-size: 13px;
+                        position: relative;
+                        bottom: 50px;
+                        color: gray;
+                    }
+                    .margin{
+                        position: relative;
+                        left: 500px;
+                    }
+                </style>
+            </head>
+            <body>
+            <div class="container">
+                <div class="PDFborder">
+                    <div class="top">
+                            <div class="full-width">
+                                <img style="position: relative;right: 200px;" src="images/xpdLogo.png" alt="XPD Logo">
+                            </div>
+                            <div  class="reciv full-width">
+                                <p> Received By: </p>
+                            </div>
+                            <div class=" full-width"><strong style="font-size: 20px; position: relative;left: 150px;bottom: 13px;"> Delivery Order (DO) - Import - Reefer</strong></div>
+                            <div class="full-width">
+                                <br><br><br><br>                   
+                                <p>Date:</p>
+                                <p><strong>${date} ${hour}</strong></p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <table style="display: grid-row;">
+                            <tr>
+                                <td class="wrap-text">
+                                    Pickup Information:<strong><br>${pickupInfo}
+                                                               <br>${pickupAddress}
+                                                               <br>${pickupDate}
+                                                               <br>${pickupHour}</strong>           
+                                            
+                                </td>
+                                
+                                <td class="wrap-text">Delivery Information:<strong><br>${deliveryInfo}
+                                                               <br>${deliveryAddress}
+                                                               <br>${deliveryDate}
+                                                               <br>${deliveryHour}</strong> 
+
+                                <td class="wrap-text"><p>Carrier: <strong><br>${carier}</strong> </p>
+                                                      <p>PRO Number: <strong><br>${PROnum}</strong> </p>
+                                                      <p>Traking Number: <strong><br>${trakNum}</strong> </p>
+                                                      <p>Supplier: <strong><br>${supplier}</strong> </p>
+                                    
+                            </tr>
+                            
+                            <tr>
+                                <td class="wrap-text">
+                                    <p>Shipper:<strong><br>${shipper} </strong></p>
+                                    <p>Driver:<strong><br>${driver} </strong></p>
+                                    <p>Driver License: <strong><br>${driverLic}</strong></p>
+                                </td>
+
+                                <td class="wrap-text">
+                                    <p>Consignee::<strong><br>${consignee} </strong></p>
+                                    <p>Invoice Number:<strong><br>${invNum} </strong></p>
+                                    <p>PO Number:<strong><br>${POnum} </strong></p>
+                                </td>
+
+                                <td style="background-color: #d6d4d4;" class="wrap-text">
+                                    <p>Charges:<br><strong>${charges} </strong></p>
+                                </td>
+                                
+                            </tr>
+                        </table>
+
+                        
+                                <table>
+                                    ${table1}
+                                </table>
+                                <br>
+                                <table>
+                                    ${table2}
+                                </table>
+                            <p>Error: Exception Ocurred</p>
+                            <br><br><br><br><br><br><br><br><br>
+                     
+                        <hr>
+                        <div class="bottom full-width">
+                            <div class="full-width">
+                                <p>Notes:</p>
+                            </div>
+                            <div class="full-width">
+                                
+                            </div>
+                            <div class="full-width">
+                                
+                            </div>
+                            <div class="totals full-width">
+
+                                <div>Pieces: <p class="totalNums"><strong>${totalPieces}</strong></p></div>
+                                <div>Weight: <p class="totalNums"><strong>${totalWeight}Kg</strong></p></div>
+                                <div>Volume: <p class="totalNums"><strong>${totalVolume}VKg</strong></p></div>
+                            </div>
+                        </div>
+
+                        <div>       
+                            <div style="position: relative; left: 300px;" class="footer">
+                                <p style="position: relative; left: 300px; top:70px;">______________________________________</p>  
+                                <p style="position: relative; left: 520px; top:60px;">Signature</p>     
+                            </div>
+                        </div>
+                            
+                </div>
+            </div>
+            </body>
+            </html>
+                          `;
+        });
+    </script>
+</body>
+</html>
